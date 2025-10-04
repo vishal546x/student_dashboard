@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <span>🏠</span>
+                <span>Home</span>
+            </div>
+            <div class="navbar-controls">
+                <button class="theme-toggle" id="themeToggleBtn">🌙</button>
+                <button class="hamburger" id="hamburgerBtn">☰</button>
+            </div>
+        </nav>
+        
+        <div id="main-content-to-blur" class="main-content">
+            <aside class="sidebar" id="sidebar">
+                <nav class="sidebar-nav">
+                    <a href="#" onclick="showSection('dashboard')">Dashboard</a>
+                    <a href="#" onclick="showSection('students')">Students</a>
+                    <a href="#" onclick="showSection('faculty')">Faculty</a>
+                    <a href="#" onclick="showSection('timetables')">Timetables</a>
+                    <a href="#" onclick="showSection('feedback')">Feedback</a>
+                    <a href="#" onclick="logout()">Log Out</a>
+                </nav>
+            </aside>
+            
+            <main class="content-area">
+                <div id="dashboard-section" class="content-section">
+                    <div class="dashboard-header">
+                        <div>
+                            <h1>Dashboard</h1>
+                             <div class="scroll-left"  >
+        
+                            <p id="department-info">Loading department info...</p>
+    </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="controls-container">
+                        <div class="class-selector">
+                            <label for="yearSelect">Year:</label>
+                            <select id="yearSelect">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                        <div class="class-selector">
+                            <label for="sectionSelect">Section:</label>
+                            <select id="sectionSelect">
+                                <option value="A" selected>A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                        <div class="date-selector">
+                            <label for="attendanceDate">Date:</label>
+                            <input type="date" id="attendanceDate" name="attendanceDate">
+                            <button id="downloadExcelBtn" title="Download Daily Attendance">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalStudentsValue">-</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="overallAttendanceValue">-</div>
+                            <div class="stat-label">Overall Attendance</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="activeSubjectsValue">-</div>
+                            <div class="stat-label">Active Subjects</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="defaultersValue">-</div>
+                            <div class="stat-label">Defaulters</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        
+
+                        <div class="card">
+                            <div class="card-header"><h3>Subject-wise Attendance (%)</h3></div>
+                            <div class="chart-container" id="bar-chart-container"><canvas id="attendanceChart"></canvas></div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Overall Day Attendance</h3>
+                                <div class="card-controls">
+                                    <button id="showPresentBtn" class="modal-trigger-btn">Present</button>
+                                    <button id="showAbsentBtn" class="modal-trigger-btn">Absent</button>
+                                </div>
+                            </div>
+                            <div class="chart-container" id="pie-chart-container">
+                                <canvas id="dailyAttendancePieChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                           <div class="card-header">
+                                <h3>Weekly Attendance (%)</h3>
+                                <div class="week-selector">
+                                    <label for="weekSelect">Week:</label>
+                                    <select id="weekSelect">
+                                        <option value="1" selected>1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-container" id="weekly-chart-container"><canvas id="weeklyAttendanceChart"></canvas></div>
+                        </div>
+                        <div class="card">
+    <div class="card-header">
+        <h3>Monthly Attendance (%)</h3>
+        
+        <div class="month-selector">
+            <label for="monthSelect">Month:</label>
+            <select id="monthSelect">
+                <option value="0">January</option>
+                <option value="1">February</option>
+                <option value="2">March</option>
+                <option value="3">April</option>
+                <option value="4">May</option>
+                <option value="5">June</option>
+                <option value="6">July</option>
+                <option value="7">August</option>
+                <option value="8" selected>September</option>
+                <option value="9">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="chart-container" id="monthly-chart-container"><canvas id="monthlyAttendanceChart"></canvas></div>
+</div>
+                    </div>
+                </div>
+
+                <div id="students-section" class="content-section" style="display: none;">
+                    <div class="dashboard-header">
+                        <h1>Student Details</h1>
+                        <p>List of all students in the selected class.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Student List</h3>
+                            <button id="downloadStudentsBtn" title="Download Student List">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table id="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>Roll Number</th>
+                                        <th>Student Name</th>
+                                        <th>Department</th>
+                                        <th>Section</th>
+                                        <th>Year</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="faculty-section" class="content-section" style="display: none;">
+                    <div class="dashboard-header">
+                        <h1>Faculty & Subject Details</h1>
+                        <p>List of all subjects and their assigned faculty members.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Subject Allocation</h3>
+                            <button id="downloadFacultyBtn" title="Download Faculty List">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table id="faculty-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject Code</th>
+                                        <th>Subject Name</th>
+                                        <th>Faculty Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="faculty-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="timetables-section" class="content-section" style="display: none;">
+                    <div class="dashboard-header">
+                        <h1>Class Timetable</h1>
+                        <p>Weekly schedule for <span id="class-id-display"></span>.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Weekly Schedule</h3>
+                            <button id="downloadTimetableBtn" title="Download Timetable">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </button>
+                        </div>
+                        <div id="timetable-container" class="table-container">
+                            <p class="loading-text">Loading timetable...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="feedback-section" class="content-section" style="display: none;">
+                    <div class="dashboard-header">
+                        <h1>Feedback</h1>
+                        <p>Please share your thoughts with us.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Write Your Feedback</h3>
+                        </div>
+                        <form id="feedbackForm">
+                            <textarea id="feedbackText" name="feedbackText" rows="10" placeholder="Please write your feedback here (up to 1000 characters)..." maxlength="1000" required></textarea>
+                            <button type="submit" class="submit-btn">Submit Feedback</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <div id="overlay" class="overlay"></div>
+    
+    <script type="module" src="dashboard.js" defer></script>
+    <div id="student-list-overlay" class="modal-overlay"></div>
+<div id="student-list-modal" class="modal-box">
+    <div class="modal-header">
+        <h3 id="modal-title">Student List</h3>
+        <button id="modal-close-btn" class="modal-close">&times;</button>
+    </div>
+    <div id="modal-student-list" class="modal-content">
+        </div>
+</div>
+</body>
+</html>

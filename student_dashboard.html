@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="student_dashboard.css">
+</head>
+<body>
+    <div id="page-container">
+        <div class="student-dashboard">
+            <header class="header">
+                <div class="header-brand">
+                    <h1>Student Portal</h1>
+                </div>
+                <div class="header-controls">
+                    <button id="profileIconBtn" class="profile-icon-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </button>
+                    <span id="student-name">Loading...</span>
+                    <button id="themeToggleBtn" class="theme-toggle-btn">🌙</button>
+                    <button id="logoutBtn" class="logout-btn">Log Out</button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <div id="attendanceAlertBox" class="card alert-card">
+                    <h2 id="alert-title"></h2>
+                    <p id="alert-message"></p>
+                    <a id="alert-action-btn" class="alert-btn" href="#">Notify Advisor</a>
+                </div>
+
+                <div class="card details-card">
+                    <h2>My Details</h2>
+                    <div class="details-grid">
+                        <p><strong>Roll Number:</strong> <span id="detail-roll"></span></p>
+                        <p><strong>Department:</strong> <span id="detail-dept"></span></p>
+                        <p><strong>Year:</strong> <span id="detail-year"></span></p>
+                        <p><strong>Section:</strong> <span id="detail-section"></span></p>
+                        <p class="full-width"><strong>Overall Monthly Attendance:</strong> <span id="detail-overall-attendance">- %</span></p>
+                        </div>
+                </div>
+
+                <div class="card attendance-card">
+                    <h2>Today's Attendance</h2>
+                    <div class="controls-container">
+                        <label for="attendanceDate">Select Date:</label>
+                        <input type="date" id="attendanceDate">
+                    </div>
+                    <div id="attendance-status-container" class="attendance-status"></div>
+                </div>
+                
+                <div class="card subject-attendance-card">
+                    <div class="card-header-flex">
+                        <h2>Subject-wise Attendance</h2>
+                        <div class="month-year-selector">
+                            <select id="monthSelect"></select>
+                            <select id="yearSelect"></select>
+                        </div>
+                    </div>
+                    <div id="subject-attendance-container">
+                        <p>Calculating percentages...</p>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <h2>Monthly Attendance Overview</h2>
+                    <div class="chart-container">
+                        <canvas id="monthlyAttendanceChart"></canvas>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="profileModalOverlay" class="modal-overlay"></div>
+    <div id="profileModal" class="modal">
+        <div class="modal-header">
+            <h2>Student Profile</h2>
+            <button id="modalCloseBtn" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p><strong>Name:</strong> <span id="modal-name"></span></p>
+            <p><strong>Roll Number:</strong> <span id="modal-roll"></span></p>
+            <p><strong>Department:</strong> <span id="modal-dept"></span></p>
+            <p><strong>Year:</strong> <span id="modal-year"></span></p>
+            <p><strong>Section:</strong> <span id="modal-section"></span></p>
+        </div>
+    </div>
+    
+    <script type="module" src="student_dashboard.js"></script>
+</body>
+</html>
